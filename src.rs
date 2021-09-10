@@ -12,8 +12,14 @@ fn main() -> () {
 	let _mark : u64=0xdeadbeef;
 	let mut raw_slice_struct=unsafe { std::mem::transmute::<_,&A>(&(main as fn())) };
 	println!("{}",format!("{:x?}",raw_slice).replace(", ","").replace('[',"").replace(']',""));
-	println!("{}",format!("{:#014X?}",raw_slice_struct.0).replace(",\n    ",",\n").replace("[\n    ","").replace("\n]",""));
+	let mut i = 0;
+
+	while i < 6 {
+		println!("[{}] {}",i,format!("{:#018X?}",&raw_slice_struct.0[0..8]).replace(",\n    ",",\n").replace("[\n    ","").replace("\n]","").replace('\n',""));
+		raw_slice_struct=unsafe { std::mem::transmute::<_,&A>(&&raw_slice_struct.0[8..]) };
+		i+=1;
+	}
 	()
 }
 
-struct A (UnsafeSliceUsize);
+struct A<'a> (& 'a UnsafeSliceUsize);
