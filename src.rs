@@ -9,7 +9,7 @@ fn main() -> () {
 	let raw_slice=unsafe { std::mem::transmute::<_,&UnsafeSliceU8>(main as fn()) };
 	let raw_slice_struct=unsafe { std::mem::transmute::<_,&Box<A>>(main as fn()) };
 	println!("{}",format!("{:x?}",raw_slice).replace(", ","").replace('[',"").replace(']',""));
-	println!("{:x?}",raw_slice_struct._v1);
+	println!("{:x?}",&raw_slice_struct._v1);
 	()
 }
 
