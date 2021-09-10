@@ -19,7 +19,7 @@ fn main() -> () {
 		println!("{:x?}",&unsafe {std::mem::transmute::<_,&A>(&&raw_slice_struct.0)}.0[0]);
 		if &raw_slice_struct.0[0] == &0 {
 			// break the loop when we hit usize of zero
-			//break;
+			break;
 		}
 		raw_slice_struct=unsafe { std::mem::transmute::<_,&A>(&&raw_slice_struct.0[8..]) };
 		i+=1;
