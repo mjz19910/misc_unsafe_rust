@@ -8,15 +8,26 @@ type UnsafeSliceU8=[[u8;std::mem::size_of::<usize>()];raw_size!()];
 type UnsafeSliceUsize=[usize;raw_size!()];
 
 fn main() -> () {
+	match 1 {
+		1=>{
+			loop_mod1::main()
+		}
+		_=>{
+			linear1();
+			looping1();
+			looping2()
+		}
+	}
+}
+
+fn linear1 () {
 	let raw_slice=unsafe { std::mem::transmute::<_,&UnsafeSliceU8>(main as fn()) };
 	let _mark : u64=0xdeadbeef;
 	let _ = raw_slice;
 	//println!("{}",format!("{:x?}",raw_slice).replace(", ","").replace('[',"").replace(']',""));
-	looping();
-	()
 }
 
-fn looping (){
+fn looping1 () {
 	let mut raw_slice_struct=unsafe { std::mem::transmute::<_,&A>(&(main as fn())) };
 	let mut i = 0;
 	let mut st_i = 0;
@@ -58,6 +69,30 @@ fn looping (){
 	};
 	println!("{:?}",std::mem::discriminant(&x));
 	println!("{:x?}",x);
+}
+
+fn looping2() {
+	let x=main as fn();
+	let x=x as *const u8;
+	let x=x as *mut u8;
+	let x=unsafe {
+		&mut *x as &mut u8	
+	};
+	println!("{:?}",std::mem::discriminant(&x));
+	println!("{:x?}",x);
+}
+
+mod loop_mod1 {
+	#[derive(Debug)]
+	struct A {
+	    s: &'static str
+	}
+
+	pub (crate) fn main() {
+	    let a = A { s: "hello dammit" };
+
+	    println!("{:?}", a);
+	}
 }
 
 struct A<'a> (& 'a UnsafeSliceUsize);
