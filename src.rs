@@ -49,7 +49,15 @@ fn looping (){
 		}
 		raw_slice_struct=unsafe { std::mem::transmute::<_,&A>(&&raw_slice_struct.0[8..]) };
 		i+=1;
-	}
+	};
+	let x=main as fn();
+	let x=x as *const u8;
+	let x=x as *mut u8;
+	let x=unsafe {
+		&mut *x as &mut u8	
+	};
+	println!("{:?}",std::mem::discriminant(&x));
+	println!("{:x?}",x);
 }
 
 struct A<'a> (& 'a UnsafeSliceUsize);
