@@ -8,12 +8,14 @@ type UnsafeSliceU8=[[u8;std::mem::size_of::<usize>()];raw_size!()];
 type UnsafeSliceUsize=[usize;raw_size!()];
 
 fn main() -> () {
-	match 1 {
+	match 2 {
 		1=>{
 			loop_mod1::main()
 		}
+		2=>{
+			linear1()
+		}
 		_=>{
-			linear1();
 			looping1();
 			looping2()
 		}
