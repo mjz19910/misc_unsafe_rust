@@ -24,7 +24,7 @@ fn linear1 () {
 	let raw_slice=unsafe { std::mem::transmute::<_,&UnsafeSliceU8>(main as fn()) };
 	let _mark : u64=0xdeadbeef;
 	let _ = raw_slice;
-	//println!("{}",format!("{:x?}",raw_slice).replace(", ","").replace('[',"").replace(']',""));
+	println!("{}",format!("{:x?}",raw_slice).replace(", ","").replace('[',"").replace(']',""));
 }
 
 fn looping1 () {
