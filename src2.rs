@@ -6,9 +6,11 @@ use core::panic::PanicInfo;
 #[lang = "eh_personality"]
 extern "C" fn eh_personality() {}
 unsafe fn exit_err(){
-    asm!("mov rdi,0x1");
-    asm!("mov rax,0x60");
-    asm!("syscall");
+    unsafe{
+        asm!("mov rdi,0x1");
+        asm!("mov rax,0x60");
+        asm!("syscall");
+    }
 }
 #[panic_handler]
 fn panic(_: &PanicInfo) -> ! {
