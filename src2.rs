@@ -5,21 +5,15 @@
 use core::panic::PanicInfo;
 #[lang = "eh_personality"]
 extern "C" fn eh_personality() {}
+unsafe fn exit_err(){
+    asm!("mov rdi,0x1");
+    asm!("mov rax,0x60");
+    asm!("syscall");
+}
 #[panic_handler]
 fn panic(_: &PanicInfo) -> ! {
-    extern "C" {
-        #[cfg_attr(
-            target_family = "unix",
-            link_name = "\n\n\x1b[s\x1b[1000D\x1b[0;31m\x1b[1merror\x1b[0m\x1b[1m: the static assertion that no panics are present has failed\x1b[0m\x1b[u\n\n"
-        )]
-        #[cfg_attr(
-            not(target_family = "unix"),
-            link_name = "\n\nerror: the static assertion that no panics are present has failed\n\n"
-        )]
-        fn never_panic() -> !;
-    }
-
-    unsafe { never_panic() }
+    unsafe{exit_err();}
+    loop {}
 }
 #[no_mangle]
 pub extern "C" fn __libc_csu_fini() {}
@@ -38,9 +32,9 @@ pub extern "C" fn __libc_start_main() {
     }
 }
 #[no_mangle]
+pub extern "C" fn mainCRTStartup(){}
+#[no_mangle]
 pub extern "C" fn main(_argc: isize, _argv: *const *const u8) -> isize {
     let x: Option<u8> = None;
-    return 0;
-    let _ = unsafe { x.unwrap_unchecked() };
     0
 }
