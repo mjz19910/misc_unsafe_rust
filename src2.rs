@@ -1,42 +1,32 @@
+#![feature(lang_items, libc, no_core, static_nobundle)]
 #![no_std]
+#![no_core]
 #![no_main]
 #![allow(unused)]
-#![feature(option_result_unwrap_unchecked, lang_items, asm)]
-use core::panic::PanicInfo;
-#[lang = "eh_personality"]
-extern "C" fn eh_personality() {}
-unsafe fn exit_err(){
-    unsafe{
-        asm!("mov rdi,0x1");
-        asm!("mov rax,0x60");
-        asm!("syscall");
-    }
-}
+#[lang = "panic_info"]
+struct PanicInfo {}
 #[panic_handler]
-fn panic(_: &PanicInfo) -> ! {
-    unsafe{exit_err();}
-    loop {}
+fn panic(info: &PanicInfo) -> ! { loop {} }
+#[lang = "eh_personality"]
+extern fn eh_personality() {}
+#[lang = "sized"]
+trait Sized {}
+#[lang = "copy"]
+trait Copy {}
+#[lang = "freeze"]
+unsafe trait Freeze {}
+
+#[link(name = "c")]
+extern "C" {
+    fn write(fd: i32, buf: *const i8, count: usize) -> isize;
+    fn exit(status: i32) -> !;
 }
+
 #[no_mangle]
-pub extern "C" fn __libc_csu_fini() {}
-#[no_mangle]
-pub extern "C" fn __libc_csu_init() {}
-#[no_mangle]
-pub extern "C" fn __libc_start_main() {
-    unsafe {
-        asm!("pop rdi");
-        asm!("mov rsi,rsp");
-        asm!("push rdi");
-        asm!("call main");
-        asm!("mov rdi,rax");
-        asm!("mov rax,0x60");
-        asm!("syscall");
+pub extern "C" fn main() -> ! {
+    let s = b"Hello, World!\n";
+    unsafe{
+        write(1, s as *const u8 as *const i8, 14);
+        exit(0)
     }
-}
-#[no_mangle]
-pub extern "C" fn mainCRTStartup(){}
-#[no_mangle]
-pub extern "C" fn main(_argc: isize, _argv: *const *const u8) -> isize {
-    let x: Option<u8> = None;
-    0
 }
