@@ -15,9 +15,7 @@ struct PanicInfo<'a> {
 fn panic_handler(info: &PanicInfo<'_>) -> ! {
     unsafe{
         exit(1);
-        no_return();
     }
-    //intrinsic::abort();
 }
 #[lang ="panic_location"]
 pub struct Location<'a> {
@@ -60,23 +58,6 @@ pub macro asm("assembly template", $(operands,)* $(options($(option),*))?) {
 #[lang = "panic"] #[no_mangle] #[track_caller]
 fn panic(expr: &'static str){
     unsafe{
-        let mut a=b"\0\0";
-        let mut c=a as *const u8 as *mut i8;
-        let x:*const i8;
-        asm!("
-        push rax
-        call 1f
-        1:
-        pop rax
-        mov {}, rax
-        pop rax
-        ",out(reg) x);
-        //rax,rbx,rcx,rdx,rsi,rdi,rsp,rip
-        let mut a=b"\x61\0" as *const u8 as *mut i8;
-        // memset equiv
-        let a:*mut i8=&mut [*a as u8;18] as *const u8 as *mut i8;
-        *a=*x;
-        write(1, a, 18);
         panic_impl(&PanicInfo {
             panic_str:expr
         });
@@ -86,7 +67,7 @@ fn panic(expr: &'static str){
 #[link(name = "c")]
 extern "C" {
     fn write(fd: i32, buf: *const i8, count: usize) -> isize;
-    fn exit(status: i32);
+    fn exit(status: i32) -> !;
 }
 impl Copy for *const i8 {}
 impl Copy for i8 {}
@@ -107,26 +88,11 @@ impl AddAssign for i32 {
     fn add_assign(&mut self, other: i32) { *self += other }
 }
 
-
-fn no_return() -> ! {
-    loop{
-        let mut x:i32=4;
-        loop {
-            x+=1;
-            loop {
-                x+=1;
-            }
-        }
-    }
-}
-
 #[no_mangle]
 pub extern "C" fn main() -> ! {
     let s = b"Hello, World!\n";
     unsafe{
-        panic("Hello, World! (panic)");
         write(1, s as *const u8 as *const i8, 14);
         exit(0);
-        no_return();
     }
 }
