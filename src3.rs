@@ -13,18 +13,16 @@ fn main() {
     println!("{:#x}", ptr.0);
     println!("{:#x}", (fn_ptr as *const usize) as usize);
     println!("{:x?}", ptr.1);
-    let x = 0x784ffu64;
-    let fn_2 = move || (x, ptr);
+    // cspell:disable-next-line
+    let x = 0x784ffcc_u64;
+    let fn_2 = || (x,);
     let fn2_ptr = &fn_2 as *const _;
     println!("{:x?}", unsafe {
         let a = fn2_ptr as *const usize;
-        let ptr_val = fn2_ptr as *const *const usize;
         (
             fn2_ptr,
             mem::size_of_val(&fn_2),
             slice::from_raw_parts(a, mem::size_of_val(&fn_2) / 8),
-            slice::from_raw_parts(*ptr_val, 1),
-            slice::from_raw_parts(*ptr_val.add(1), 1),
         )
     });
 }
