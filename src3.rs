@@ -8,7 +8,7 @@ fn main() {
         let ptr2 = (*fn_ptr) as *const usize;
         (ptr2 as usize, slice::from_raw_parts(ptr2 as *const u8, 12))
     };
-    println!("{:x}", mem::size_of_val(fn_ref));
+    assert_eq!(mem::size_of_val(fn_ref), 0);
     println!("{:#x}", ptr.0);
     println!("{:#x}", (fn_ptr as *const usize) as usize);
     println!("{:x?}", ptr.1);
