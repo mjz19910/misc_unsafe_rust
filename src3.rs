@@ -12,7 +12,7 @@ fn main() {
             slice::from_raw_parts(ptr2 as *const u8, 12),
         )
     };
-    println!("{:x}", mem::size_of_val(&(main as fn())));
+    println!("{:x}", mem::size_of_val(fn_ref));
     println!("{:#x}", ptr.0);
     println!("{:#x}", (fn_ptr as *const usize) as usize);
     println!("{:x?}", ptr.1);
