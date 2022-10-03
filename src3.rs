@@ -9,15 +9,17 @@ fn main() {
         (
             ptr2 as usize,
             (fn_ptr as *const usize) as usize,
-            slice::from_raw_parts(ptr2 as *const u8, 12)
+            slice::from_raw_parts(ptr2 as *const u8, 12),
         )
     };
     assert_eq!(mem::size_of_val(fn_ref), 0);
     println!("{:#x} -> {:#x}", ptr.0, ptr.1);
     println!("{:#x} -> {:x?}", ptr.1, ptr.2);
     // cspell:disable-next-line
+    let a = 0u64;
     let x = 0x4151u64;
-    let fn_2 = &(||x) as &dyn Fn() -> _;
+    let z = 0u64;
+    let fn_2 = &(move || (a, x, z)) as &dyn Fn() -> _;
     let fn2_ptr = fn_2 as *const _;
     println!("{:x?}", unsafe {
         let a = fn2_ptr as *const usize;
