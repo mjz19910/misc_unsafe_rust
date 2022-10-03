@@ -15,7 +15,7 @@ fn main() {
     println!("{:x?}", ptr.1);
     // cspell:disable-next-line
     let x = 0x784ffcc_u64;
-    let fn_2 = || (x,);
+    let fn_2 = ||x;
     let fn2_ptr = &fn_2 as *const _;
     println!("{:x?}", unsafe {
         let a = fn2_ptr as *const usize;
