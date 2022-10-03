@@ -67,7 +67,7 @@ fn looping1 () {
 	let x=x as *const u8;
 	let x=x as *mut u8;
 	let x=unsafe {
-		&mut *x as &mut u8	
+		&mut *x as &mut u8
 	};
 	println!("{:?}",std::mem::discriminant(&x));
 	println!("{:x?}",x);
@@ -78,7 +78,7 @@ fn looping2() {
 	let x=x as *const u8;
 	let x=x as *mut u8;
 	let x=unsafe {
-		&mut *x as &mut u8	
+		&mut *x as &mut u8
 	};
 	println!("{:?}",std::mem::discriminant(&x));
 	println!("{:x?}",x);
