@@ -23,8 +23,8 @@ fn main() {
         let a = fn2_ptr as *const usize;
         (
             fn2_ptr,
-            mem::size_of_val(&fn_2),
-            slice::from_raw_parts(a, mem::size_of_val(&fn_2) / 8),
+            mem::size_of_val(fn_2),
+            slice::from_raw_parts(a, mem::size_of_val(fn_2) / 8),
             slice::from_raw_parts((*a) as *const usize, 1),
         )
     });
